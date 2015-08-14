@@ -253,6 +253,9 @@ class CLI(object) :
         parser.add_argument("-p", "--projectid",
                             help = "Id of the project the target wiki page belongs to",
                             default = "")
+        parser.add_argument("--topicparentpage",
+                            help = "Name of the parent page whose child pages should be collected.",
+                            default = "")
 
         return parser
 
@@ -282,7 +285,7 @@ class CLI(object) :
 
     def getTopicParentPage(self) :
         """Pages with this parent page will be listet on the target page."""
-        return "Begriffe".replace('_', ' ')
+        return self._args.topicparentpage.replace('_', ' ')
 
 #---
 def main() :
