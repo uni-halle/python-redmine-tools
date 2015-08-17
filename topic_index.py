@@ -155,7 +155,12 @@ def iterGlobaleTopicIndexLines(redmineHandle, topicParentPage, **keywords) :
     yield ""
     yield "Diese Seite wurde automatisch generiert. Manuelle Änderungen an dieser Seite werden beim nächsten Lauf überschrieben werdern!"
     yield ""
-
+    yield "h2. In diesem Projekt"
+    yield ""
+    yield "{{child_pages}}"
+    yield ""
+    yield "h2. In diesem Projekt und Unterprojekten"
+    yield ""
 
     letterHeading = None
     for entry in sorted(iterTopicEntries(redmineHandle, topicParentPage, **keywords)) :
@@ -163,16 +168,20 @@ def iterGlobaleTopicIndexLines(redmineHandle, topicParentPage, **keywords) :
         projectIdent = entry[1]
         projectBreadcrumbTrail = entry[2]
         pageAuthor = entry[3]
+        pageUpdatedOn = entry[4]
+        pageCreatedOn = entry[5]
+
+        updatedOnDate = pageUpdatedOn.strftime("%d.%m.%Y")
 
         firstLetter = prettyPageTitle[0]
         if firstLetter != letterHeading :
             yield ""
             yield ""
-            yield "h2. %s" % (firstLetter,)
+            yield "h3. %s" % (firstLetter,)
             yield ""
             letterHeading = firstLetter
         indent = "*"
-        yield "%(indent)s [[%(projectIdent)s:%(prettyPageTitle)s]] (%(projectBreadcrumbTrail)s) (von %(pageAuthor)s) " % locals()
+        yield "%(indent)s [[%(projectIdent)s:%(prettyPageTitle)s]] (%(projectBreadcrumbTrail)s) (zuletzt geändert am %(updatedOnDate)s von %(pageAuthor)s) " % locals()
 
 
 def iterTopicEntries(redmineHandle, topicParentPage, **keywords) :
@@ -191,7 +200,7 @@ def iterTopicEntries(redmineHandle, topicParentPage, **keywords) :
     FIRST_TIME = True
 
     for (projNum, project) in enumerate(projectTree.iter_dfs()) :
-        projectBreadcrumbTrail = " >> ".join(projectTree.getBreadcrumbTrail(project))
+        projectBreadcrumbTrail = " » ".join(projectTree.getBreadcrumbTrail(project))
         pid = project.id # numeric
         projectIdent = project.identifier.encode('utf-8', 'ignore') # symbolic
         pname = project.name
@@ -225,7 +234,7 @@ def iterTopicEntries(redmineHandle, topicParentPage, **keywords) :
 
                 if topicParentPage in pageBreadcrumbTrail :
                     indent = "*"
-                    yield (prettyPageTitle, projectIdent, projectBreadcrumbTrail, pageAuthor)
+                    yield (prettyPageTitle, projectIdent, projectBreadcrumbTrail, pageAuthor, pageUpdatedOn, pageCreatedOn)
                     # yield "%(indent)s %(pageTitle)s (von %(pageAuthor)s) -> %(ancestors)r" % locals()
 
             if printProgress :
