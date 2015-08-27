@@ -163,7 +163,7 @@ def iterGlobaleIndexLines(redmineHandle, **keywords) :
     FIRST_TIME = True
 
     for (projNum, project) in enumerate(projectTree.iter_dfs()) :
-        breadcrumbTrail = " >> ".join(projectTree.getBreadcrumbTrail(project))
+        breadcrumbTrail = " » ".join(projectTree.getBreadcrumbTrail(project))
         pid = project.id # numeric
         projectIdent = project.identifier.encode('utf-8', 'ignore') # symbolic
         pname = project.name
