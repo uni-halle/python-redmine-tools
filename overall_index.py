@@ -6,11 +6,19 @@
 import sys
 import StringIO
 import argparse
+import logging
 
 #---
 #--- 3rd party
 from redmine import Redmine
 from redmine import exceptions as redmine_exceptions
+
+# To disable all urllib3 warnings
+import urllib3
+urllib3.disable_warnings()
+
+# To capture warnings to your own log with the logging module
+logging.captureWarnings(True)
 
 #---
 class ProjectTree(object) :
@@ -269,7 +277,7 @@ def main() :
     baseURL = cli.getBaseURL()
     apiKey = cli.getApiKey()
 
-    redmineHandle = Redmine(baseURL, key = apiKey)
+    redmineHandle = Redmine(baseURL, key = apiKey, requests={'verify': False})
 
 
     allProjects = redmineHandle.project.all()
